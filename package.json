@@ -14,6 +14,7 @@
     "express": "^4.16.4",
     "i": "^0.3.6",
     "npm": "^6.7.0",
-    "sleep-promise": "^8.0.1"
+    "sleep-promise": "^8.0.1",
+    "crypto": "latest"
   }
 }

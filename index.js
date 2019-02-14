@@ -1,16 +1,47 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const sleep = require('sleep-promise')
+const crypto = require('crypto')
 const app = express()
 const port = 1338
 
-app.use(bodyParser.json())
+// TODO: Change this to your sign key
+const sign_key = 'kn2k4n2k4n2k4n24asd'
+
+app.use(bodyParser.raw())
 
 app.get('/', async (req, res) => res.send('Hello World!'))
 
 app.post('/ping', async (req, res) => {
-    console.log('Got message with body: ', req.body)
-    return res.json({'status': 'ok'})
+    let body = ''
+
+    req.on('data', chunk => {
+        body += chunk.toString()
+    })
+
+    req.on('end', () => {
+        timestamp = req.headers['x-billogram-request-timestamp']
+        signature = req.headers['x-billogram-signature']
+
+        console.log('Timestamp: ', timestamp)
+        console.log('Signature: ', signature)
+
+        base_string = timestamp + ':' + body
+
+        const hash = crypto.createHmac('sha256', sign_key).update(base_string).digest('hex')
+
+        console.log('Calculated hash: ', hash)
+        console.log('Validate signature: ', signature == hash ? 'Calculated signature is valid!' : 'Calculated signature does NOT match :(')
+
+        if(signature == hash) {
+            res.status(200)
+            return res.json({'status': '200 OK'})
+        }
+        else {
+            res.status(400)
+            return res.json({'status': '400 Bad Request'})
+        }
+    })
 })
 
 app.post('/redirector', async (req, res) => {

@@ -6,7 +6,7 @@ const app = express()
 const port = 1338
 
 // TODO: Change this to your sign key
-const sign_key = 'kn2k4n2k4n2k4n24asd'
+const sign_key = 'fake_sign_key'
 
 app.use(bodyParser.raw())
 

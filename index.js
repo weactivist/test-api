@@ -20,8 +20,8 @@ app.post('/ping', async (req, res) => {
     })
 
     req.on('end', () => {
-        timestamp = req.headers['x-billogram-request-timestamp']
-        signature = req.headers['x-billogram-signature']
+        timestamp = req.headers['billogram-request-timestamp']
+        signature = req.headers['billogram-signature']
 
         console.log('Timestamp: ', timestamp)
         console.log('Signature: ', signature)
